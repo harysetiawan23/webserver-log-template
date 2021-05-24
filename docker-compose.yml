@@ -1,0 +1,42 @@
+version: "3.8"
+
+services: 
+
+    elasticsearch:
+        image: elasticsearch:5.5-alpine
+        environment:
+            - cluster.name=docker-cluster
+            - bootstrap.memory_lock=true
+            - xpack.security.enabled=false
+            - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        ports:
+            - 9200:9200
+    
+    logstash:
+        build: 
+            context: ./logstash
+            dockerfile: Dockerfile
+        image: 127.0.0.1/logstash
+        depends_on: 
+            - elasticsearch
+
+    nginx-server:
+        build: 
+            context: ./nginx
+            dockerfile: Dockerfile
+        image: 127.0.0.1/nginx-server
+        depends_on: 
+            - logstash
+        ports: 
+            - 8081:80
+            
+    # Your Application deployment
+    api-server:
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        image: 127.0.0.1/api-server
