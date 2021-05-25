@@ -1,0 +1,6 @@
+*
+!logstash/**
+!nginx
+!docker-compose.yml
+!.gitignore
+!kibana/
