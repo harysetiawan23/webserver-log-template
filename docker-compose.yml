@@ -15,7 +15,7 @@ services:
                 hard: -1
         ports:
             - 9200:9200
-    
+
     logstash:
         build: 
             context: ./logstash
@@ -33,10 +33,15 @@ services:
             - logstash
         ports: 
             - 8081:80
-            
+    
     # Your Code Goes Here
     api-server:
         build:
             context: .
             dockerfile: Dockerfile
         image: 127.0.0.1/api-server
+
+    kibana-dashboard:
+        image: docker.elastic.co/kibana/kibana:7.12.1
+        ports: 
+            - 5601:5601
